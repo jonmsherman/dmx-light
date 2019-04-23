@@ -42,6 +42,7 @@
 */
 
 #include "mcc_generated_files/mcc.h"
+#include "clock.h"
 
 #pragma config WDTE = OFF
 
@@ -61,7 +62,7 @@ void main(void)
     // initialize the device
     SYSTEM_Initialize();
     EUSART1_SetRxInterruptHandler(DMXFrameISR);
-
+    CLOCK_init();
     // When using interrupts, you need to set the Global and Peripheral Interrupt Enable bits
     // Use the following macros to:
 
