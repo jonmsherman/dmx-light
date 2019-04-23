@@ -20,25 +20,15 @@ static void writeData(uint8_t address, uint8_t data)
 }
 
 
-void TM1650_setDigit(uint8_t digit, uint8_t data)
+void TM1650_setDigit(uint8_t digit, uint8_t data, uint8_t DP)
 {
-    uint8_t realData = charTable[data - 32];
-    if (digit == 0)
+    uint8_t value; 
+    value = (charTable[data-32]); // get charTable[] value
+    if(DP == 1) // if DP, add 128 to add decimal point on display
     {
-        writeData(0x34, realData);
-    } 
-    else if ( digit == 1)
-    {
-        writeData(0x35, realData);   
+        value += 128;
     }
-    else if ( digit == 2)
-    {
-        writeData(0x36, realData);   
-    }
-    else if ( digit == 3)
-    {
-        writeData(0x37, realData);   
-    }
+    writeData((digit + 0x34), value); // write data to each digit
 }
 
 void TM1650_init()
