@@ -1,5 +1,6 @@
 #define BUTTON_COUNT 4
 #define BUTTON_SCAN_INTERVAL 10
+#define HOLD_TIME 500
 
 #include <stdbool.h>
 #include <xc.h>
@@ -31,6 +32,10 @@ void BUTTONS_init() {
     TRISC |= 0x07;
     WPUC |= 0x07;
     ANSELC &= 0xF8;
+    
+    TRISAbits.TRISA2 = 1;
+    WPUAbits.WPUA2 = 1;
+    ANSELAbits.ANSA2 = 0;
 
 }
 
@@ -48,6 +53,8 @@ void BUTTONS_task() {
         button_t* btn = buttons + i;
         
         // figure out if the button is currently activated or not
+        volatile uint8_t buttonValue = (*(btn->port) & (1 << (btn->pin)));
+        volatile uint8_t dummyVariable = 0;
         if ((*(btn->port) & (1 << (btn->pin))) == 0) {
             btn->state = STATE_PRESSED;
         } else {
@@ -60,7 +67,28 @@ void BUTTONS_task() {
            ) {
             // we released the button
             btn->event = EVENT_PRESSED;
+        } 
+        
+        if (btn->state == STATE_PRESSED 
+                && btn->lastState == STATE_UNPRESSED)
+        {
+            btn->holdTime = time;
         }
+        
+        if (btn->state == STATE_PRESSED 
+                && btn->lastState == STATE_PRESSED)
+        {
+            if (time - btn->holdTime > HOLD_TIME)
+            {
+                btn->event = EVENT_HELD;
+            }     
+        }
+        
+        if (btn->state == STATE_UNPRESSED && btn->event == EVENT_HELD)
+        {
+            btn->event = EVENT_IDLE;
+        }
+       
 
         btn->lastState = btn->state;
     }
@@ -70,6 +98,14 @@ bool BUTTONS_isClicked(button_t* button) {
     if (button->event == EVENT_PRESSED) {
         button->event = EVENT_IDLE;
         return true;
+    }
+    
+    return false;
+}
+
+bool BUTTONS_isHeld(button_t* button) {
+    if (button->event == EVENT_HELD){
+       return true; 
     }
     
     return false;
