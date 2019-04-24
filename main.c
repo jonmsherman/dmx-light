@@ -42,6 +42,10 @@
 */
 
 #include "mcc_generated_files/mcc.h"
+#include "clock.h"
+#include "tm1650.h"
+#include "buttons.h"
+#include "controller.h"
 
 #pragma config WDTE = OFF
 
@@ -60,15 +64,14 @@ void main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
-    EUSART1_SetRxInterruptHandler(DMXFrameISR);
-
+//    EUSART1_SetRxInterruptHandler(DMXFrameISR);
+    CLOCK_init();
     // When using interrupts, you need to set the Global and Peripheral Interrupt Enable bits
     // Use the following macros to:
 
     // Enable the Global Interrupts
     INTERRUPT_GlobalInterruptEnable();
-    
-
+   
     // Enable the Peripheral Interrupts
     INTERRUPT_PeripheralInterruptEnable();
 
@@ -78,11 +81,16 @@ void main(void)
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
 
-    LED_init();
+//    LED_init();
+    TM1650_init();
+    BUTTONS_init();
+    CONTROLLER_init();
     
     while (1)
     {
-        LED_setColor(DMXFrame[2],DMXFrame[3],DMXFrame[4],DMXFrame[5]);
+        BUTTONS_task();
+        CONTROLLER_task();
+//        LED_setColor(DMXFrame[2],DMXFrame[3],DMXFrame[4],DMXFrame[5]);
         // Add your application code
     }
 }
