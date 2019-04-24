@@ -44,6 +44,8 @@
 #include "mcc_generated_files/mcc.h"
 #include "clock.h"
 #include "tm1650.h"
+#include "buttons.h"
+#include "controller.h"
 
 #pragma config WDTE = OFF
 
@@ -57,8 +59,6 @@ uint16_t currentDMXSlot = 0;
 void DMXFrameISR();
 void LED_init();
 void LED_setColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t white);
-void Blink1();
-void Blink2();
 
 void main(void)
 {
@@ -83,49 +83,16 @@ void main(void)
 
 //    LED_init();
     TM1650_init();
+    BUTTONS_init();
+    CONTROLLER_init();
+    
     while (1)
     {
-        Blink1();
-        Blink2();
+        BUTTONS_task();
+        CONTROLLER_task();
 //        LED_setColor(DMXFrame[2],DMXFrame[3],DMXFrame[4],DMXFrame[5]);
         // Add your application code
     }
-}
-
-void Blink2() {
-    static bool value2 = 0;
-    static time_t lastTime2 = 0;
-    
-    time_t time = CLOCK_getTime();
-    if(time <= lastTime2 + 512)
-        return;
-    
-    lastTime2 = time;
-    value2 = !value2;
-    
-    if(value2)
-        TM1650_setDigit(1, '8', 0);
-    else
-        TM1650_setDigit(1, ' ', 0);
-    
-}
-
-void Blink1() {
-    static bool value = 0;
-    static time_t lastTime = 0;
-    
-    time_t time = CLOCK_getTime();
-    if(time <= lastTime + 237)
-        return;
-    
-    lastTime = time;
-    value = !value;
-    
-    if(value)
-        TM1650_setDigit(0, '8', 0);
-    else
-        TM1650_setDigit(0, ' ', 0);
-    
 }
 
 void DMXFrameISR()

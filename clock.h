@@ -5,7 +5,7 @@
     
 typedef uint16_t time_t;
 
-void CLOCK_init();
-time_t CLOCK_getTime();
+void CLOCK_init(void);
+time_t CLOCK_getTime(void);
 
 #endif	/* CLOCK_H */

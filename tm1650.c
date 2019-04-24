@@ -31,6 +31,16 @@ void TM1650_setDigit(uint8_t digit, uint8_t data, uint8_t DP)
     writeData((digit + 0x34), value); // write data to each digit
 }
 
+void TM1650_fastPrintNum(uint16_t num)
+{
+    for (int i = 0; i < 4; i++)
+    {
+       uint8_t value = num % 10;
+       TM1650_setDigit(3-i,value + '0',0);
+       num /= 10;
+    }
+}
+
 void TM1650_init()
 {
     I2C1_MESSAGE_STATUS status = I2C1_MESSAGE_PENDING;
