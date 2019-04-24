@@ -6,6 +6,8 @@
 uint16_t address = 1;
 static time_t lastTime = 0;
 static uint8_t delayTime = 0;
+static time_t lastActiveTime = 0;
+
 void CONTROLLER_init() {
     TM1650_fastPrintNum(address);
 }
@@ -39,6 +41,7 @@ void address_dec()
 }
 
 void CONTROLLER_task() {
+    bool active = true;
     time_t time = CLOCK_getTime();
 
     // only run every 10 ms
@@ -76,5 +79,18 @@ void CONTROLLER_task() {
     else 
     {
         delayTime = 0;
+        active = false;
+    }
+    
+    if(active)
+    {
+        TM1650_enable(true);
+        lastActiveTime = CLOCK_getTime();
+    }
+    
+    if(CLOCK_getTime() - lastActiveTime >= 5000)
+    {      
+        TM1650_enable(false);
+        lastActiveTime = CLOCK_getTime() - 5001;
     }
 }

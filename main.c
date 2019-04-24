@@ -40,7 +40,7 @@
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
 */
-
+#include <stdbool.h>
 #include "mcc_generated_files/mcc.h"
 #include "clock.h"
 #include "tm1650.h"
@@ -64,6 +64,7 @@ void main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
+    __delay_ms(500);
 //    EUSART1_SetRxInterruptHandler(DMXFrameISR);
     CLOCK_init();
     // When using interrupts, you need to set the Global and Peripheral Interrupt Enable bits
@@ -85,7 +86,6 @@ void main(void)
     TM1650_init();
     BUTTONS_init();
     CONTROLLER_init();
-    
     while (1)
     {
         BUTTONS_task();

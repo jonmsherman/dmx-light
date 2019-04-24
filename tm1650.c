@@ -1,6 +1,9 @@
 
+#include <stdbool.h>
 #include "mcc_generated_files/i2c1.h"
 #include "tm1650.h"
+
+static bool isDisplayEnabled = false;
 
 const uint8_t charTable[] = 
 {
@@ -43,8 +46,23 @@ void TM1650_fastPrintNum(uint16_t num)
 
 void TM1650_init()
 {
+//    I2C1_MESSAGE_STATUS status = I2C1_MESSAGE_PENDING;
+//    uint8_t displayOn = 0x01;
+//    I2C1_MasterWrite(&displayOn, 1, 0x24, &status);
+//    while (status == I2C1_MESSAGE_PENDING); 
+    TM1650_enable(true);
+}
+
+void TM1650_enable(bool enable)
+{
+    isDisplayEnabled = enable;
     I2C1_MESSAGE_STATUS status = I2C1_MESSAGE_PENDING;
-    uint8_t displayOn = 0x01;
-    I2C1_MasterWrite(&displayOn, 1, 0x24, &status);
+    uint8_t display  = enable ? 0x01 : 0x00;    
+    I2C1_MasterWrite(&display, 1, 0x24, &status);
     while (status == I2C1_MESSAGE_PENDING); 
+}
+
+bool TM1650_isEnabled()
+{
+    return isDisplayEnabled;
 }
