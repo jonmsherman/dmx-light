@@ -46,6 +46,8 @@
 #include "tm1650.h"
 #include "buttons.h"
 #include "controller.h"
+#include "beat.h"
+#include "ledblink.h"
 
 #pragma config WDTE = OFF
 
@@ -67,6 +69,7 @@ void main(void)
     __delay_ms(500);
 //    EUSART1_SetRxInterruptHandler(DMXFrameISR);
     CLOCK_init();
+    
     // When using interrupts, you need to set the Global and Peripheral Interrupt Enable bits
     // Use the following macros to:
 
@@ -86,10 +89,17 @@ void main(void)
     TM1650_init();
     BUTTONS_init();
     CONTROLLER_init();
+    BEAT_init();
+    LEDBlink_init();
+    LED_init();
     while (1)
     {
         BUTTONS_task();
         CONTROLLER_task();
+        BEAT_task();
+        LEDBlink_task();
+        LED_setColor(255,255,255,255);
+
 //        LED_setColor(DMXFrame[2],DMXFrame[3],DMXFrame[4],DMXFrame[5]);
         // Add your application code
     }

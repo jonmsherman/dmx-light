@@ -14,6 +14,7 @@
         <itemPath>mcc_generated_files/mcc.h</itemPath>
         <itemPath>mcc_generated_files/tmr0.h</itemPath>
         <itemPath>mcc_generated_files/i2c1.h</itemPath>
+        <itemPath>mcc_generated_files/adcc.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -33,6 +34,7 @@
         <itemPath>mcc_generated_files/pin_manager.c</itemPath>
         <itemPath>mcc_generated_files/tmr0.c</itemPath>
         <itemPath>mcc_generated_files/i2c1.c</itemPath>
+        <itemPath>mcc_generated_files/adcc.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
       <itemPath>clock.c</itemPath>
@@ -43,6 +45,14 @@
       <itemPath>buttons.h</itemPath>
       <itemPath>controller.c</itemPath>
       <itemPath>controller.h</itemPath>
+      <itemPath>beat.c</itemPath>
+      <itemPath>beat.h</itemPath>
+      <itemPath>led.c</itemPath>
+      <itemPath>led.h</itemPath>
+      <itemPath>ledblink.c</itemPath>
+      <itemPath>ledblink.h</itemPath>
+      <itemPath>dmx.c</itemPath>
+      <itemPath>dmx.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
